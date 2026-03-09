@@ -1,0 +1,288 @@
+# Project: {PROJECT_NAME}
+
+{PROJECT_DESC}
+
+## Template Information
+<!-- Auto-generated, do not edit manually -->
+- **Template Version**: {TEMPLATE_VERSION}
+- **Created**: {CREATION_DATE}
+- **Template Source**: main-brain v{TEMPLATE_VERSION}
+- **Upgrade Path**: Run `bash scripts/upgrade-from-template.sh` to check for template updates
+
+## 專案結構
+<!-- 專案建立後補充 -->
+
+## 技術棧
+{TECH_STACK}
+
+## Anthropic Workflow Principles
+<!-- These principles guide how Claude works in this project -->
+<!-- Full details: templates/workflow-rules/anthropic-principles.md in main-brain -->
+
+### 1. Self-Improvement Loop
+**Rule**: After ANY correction from the user, update `context/LEARNINGS.md`
+
+**Process**:
+1. User points out a mistake
+2. Fix the issue immediately
+3. Update `context/LEARNINGS.md` with structured entry:
+   - Date (YYYY-MM-DD)
+   - Problem description
+   - Root cause
+   - Fix applied
+   - Rule to prevent recurrence
+4. Use `/lesson` command for comprehensive session review
+
+**Example Entry**:
+```markdown
+### 2026-02-24
+#### Problem: Used bash cat instead of Read tool
+- **What**: Used `bash cat file.txt` instead of Read tool
+- **Why**: Defaulted to familiar bash patterns
+- **Fix**: Used Read tool instead
+- **Rule**: ALWAYS use Read tool for file reading, NEVER bash cat/head/tail
+- **Context**: Reading configuration file for parsing
+```
+
+### 2. Plan Mode Default
+**Rule**: Tasks with 3+ steps OR architectural impact MUST use plan mode first
+
+**When to Plan**:
+- Multi-file changes (3+ files)
+- Architectural changes
+- Features touching multiple domains (frontend + backend + database)
+- Refactoring affecting 5+ files
+- Bug investigation across components
+
+**Critical**: If something goes sideways during execution → STOP → Re-plan → Execute new plan
+
+### 3. Verification Before Done
+**Rule**: NEVER mark a task complete without proof
+
+**Required Verification**:
+- Code changes: Run tests, show passing output
+- New features: Manual test + screenshot/demo
+- Bug fixes: Reproduce → fix → verify gone
+- Refactoring: All tests pass, no behavior change
+- API changes: Test with actual calls, show response
+
+**Ask Yourself**: "Would a staff engineer approve this PR as-is?"
+
+## 上下文文件
+- `context/ARCHITECTURE.md` - 系統架構和資料流
+- `context/DECISIONS.md` - 設計決策記錄 (ADR)
+- `context/LEARNINGS.md` - 經驗累積，避免重複犯錯（自我改進核心）
+
+## 編碼規範
+<!-- Generic standards from templates/workflow-rules/coding-standards.md -->
+<!-- Override in this file if project needs different conventions -->
+
+### Core Principles
+- **Simplicity First**: Minimal code impact, avoid over-engineering
+- **No Temporary Fixes**: Find root causes, no "TODO: fix later"
+- **Senior Developer Standards**: Production-ready code, not prototype quality
+
+### Naming Conventions
+- Files: `PascalCase.tsx` (components), `camelCase.ts` (utils), `kebab-case.sh` (scripts)
+- Variables: `camelCase`
+- Constants: `UPPER_SNAKE_CASE`
+- Booleans: Prefix with `is`, `has`, `should`, `can`
+
+### TypeScript (if applicable)
+- Strict mode enabled
+- Explicit return types for public functions
+- No `any` except for gradual migration or truly dynamic data
+- Prefer `unknown` over `any` when type is uncertain
+
+### Error Handling
+- ALWAYS wrap async operations in try-catch
+- User-facing errors: Show helpful message
+- Developer errors: Log details to console
+- Never silently catch errors
+
+### Functions
+- Max 50 lines for most functions
+- Max 3 parameters (use object for more)
+- Single responsibility principle
+- Descriptive names that explain what they do
+
+### Project-Specific Standards
+{CODING_STANDARDS}
+
+## 工具使用規範
+<!-- Full details: templates/workflow-rules/tool-usage-rules.md in main-brain -->
+
+**Core Principle**: Use specialized tools over bash for file operations
+
+| Operation | Use This | NOT Bash |
+|-----------|----------|----------|
+| Read files | **Read tool** | ❌ cat/head/tail |
+| Search content | **Grep tool** | ❌ grep/rg |
+| Find files | **Glob tool** | ❌ find/ls |
+| Edit files | **Edit tool** | ❌ sed/awk |
+| Write files | **Write tool** | ❌ echo >/cat <<EOF |
+
+**Why**: Specialized tools have proper error handling, encoding support, permissions handling.
+
+**When bash is OK**:
+- Git operations: `git status`, `git commit`, etc.
+- Package managers: `npm install`, `pip install`, etc.
+- System commands: `docker`, `curl`, `ssh`, etc.
+- Creating files with heredoc: `cat <<EOF > file.sh`
+
+**Path Rules**:
+- Use absolute paths when possible (avoid `cd`)
+- ALWAYS quote paths with spaces: `cd "/path/with spaces/"`
+- Before `mkdir`, verify parent directory exists with `ls`
+
+## 常見錯誤紀錄
+<!-- Claude 犯錯後，執行 /lesson 回顧並更新 -->
+<!-- Check templates/workflow-rules/common-mistakes.md for patterns to avoid -->
+
+### Self-Improvement Process
+
+**When you make a mistake**:
+1. Fix it immediately
+2. Update `context/LEARNINGS.md` with the pattern
+3. Ask yourself: "Is this a generic mistake that affects ALL projects?"
+4. If yes → Report to main-brain via `/report-learning`
+
+**Using /lesson command**:
+- Run at end of session
+- Reviews entire conversation
+- Extracts corrections and learnings
+- Updates LEARNINGS.md automatically
+
+**Reporting to main-brain**:
+```bash
+bash scripts/report-learning.sh
+```
+This submits your learning to the central repository. If 2+ projects report the same pattern, it will be added to templates for future projects.
+
+### Project-Specific Learnings
+<!-- Add entries here as mistakes are discovered -->
+
+## 階層式 CLAUDE.md 指引
+<!--
+當專案成長到有明確子目錄分工時，在子目錄建立 CLAUDE.md：
+
+  frontend/CLAUDE.md - 前端框架、元件慣例、UI 注意事項
+  backend/CLAUDE.md  - API 格式、資料庫操作、第三方服務整合
+  mobile/CLAUDE.md   - 行動端特定規範
+
+原則：只在該目錄工作時才需要的規則，不要放根目錄浪費 context。
+通用規則放根目錄，領域規則放子目錄。
+-->
+
+## 參考資料索引
+<!--
+大型文件不要直接塞進 CLAUDE.md，放在獨立檔案，這裡只列索引：
+
+- API 速查表 → docs/api-cheatsheet.md
+- 第三方 library 注意事項 → docs/library-gotchas.md
+- 部署流程 → docs/deploy-guide.md
+
+Claude 需要時會自行讀取對應檔案。
+-->
+
+## CI 自動化
+<!--
+本專案使用 Claude Code GitHub Actions 進行：
+- PR 自動 code review（claude-review.yml）
+- CI 失敗自動修復（claude-autofix.yml）
+
+設定步驟：
+1. 安裝 GitHub App: https://github.com/apps/claude
+2. 加入 repository secret: ANTHROPIC_API_KEY
+3. 工作流檔案已在 .github/workflows/
+
+在 PR 留言 @claude 可直接與 Claude 互動。
+@claude fix = 自動修復 CI 錯誤
+-->
+
+## 測試策略
+<!--
+E2E 測試使用 Playwright。執行 /e2e 讓 Claude 協助建立測試。
+
+關鍵規則：
+- 只用 getByRole, getByLabel, getByText 選取元素
+- 不用 CSS selector 或 XPath
+- 每個測試獨立，不共享狀態
+- 用 auto-retrying assertions，不用 waitForTimeout
+
+執行：
+  npm run test:e2e        # 跑全部
+  npm run test:e2e:ui     # UI 模式 debug
+  npm run test:e2e:debug  # 逐步 debug
+-->
+
+## Skills 管理
+
+本專案使用 Skills Management System 管理可重用模組。
+
+### 新增 Skill
+
+1. 建立 skill 目錄：`mkdir -p .claude/skills/my-skill`
+2. 複製 manifest 模板：`cp templates/skills/skill-manifest.yml.tmpl .claude/skills/my-skill/skill-manifest.yml`
+3. 編輯 manifest，聲明依賴與測試
+4. 實作主程式與測試
+
+### 驗證 Skill
+
+```bash
+# 檢查依賴
+bash scripts/skill-deps-check.sh .claude/skills/my-skill/skill-manifest.yml
+
+# 執行測試
+bash scripts/skill-test.sh my-skill all
+
+# 完整驗證
+bash scripts/skill-validate.sh my-skill
+```
+
+### Skill 依賴聲明
+
+在 `skill-manifest.yml` 聲明所有依賴：
+- `dependencies.bins` - 系統指令（node, jq, curl）
+- `dependencies.env_vars` - 環境變數（API keys）
+- `dependencies.skills` - 其他 Skills
+- `dependencies.config_files` - 配置檔
+
+Claude 在執行 Skill 前會自動檢查依賴。
+
+## PDCA 工具
+- `/lesson` - Session 結束後回顧對話，提取教訓寫入 LEARNINGS.md（自我改進核心）
+- `/report-learning` - 回報通用學習給 main-brain（或用 `bash scripts/report-learning.sh`）
+- `/cr` - 程式碼審查（code review）
+- `/techdebt` - 技術債掃描
+- `/e2e` - 建立或執行 e2e 測試（Playwright）
+- `/project-insights` - 跨 session 審計，基於歷史數據產出 CLAUDE.md 改進建議
+
+## Template Evolution Participation
+
+This project was created from main-brain templates v{TEMPLATE_VERSION}.
+
+**Benefits of template evolution**:
+- Your mistakes help all future projects
+- You inherit learnings from other projects
+- Templates improve continuously based on real usage
+
+**How to participate**:
+1. **Report learnings**: Use `/report-learning` when you discover a generic pattern
+2. **Check for updates**: Run `bash scripts/upgrade-from-template.sh` quarterly
+3. **Selective adoption**: Choose which new rules to adopt when upgrading
+
+**What gets propagated to templates**:
+- Patterns reported by 2+ projects
+- High-severity mistakes
+- Best practices that work across multiple tech stacks
+
+**What stays project-specific**:
+- Business logic errors
+- Domain-specific patterns
+- Project-unique configurations
+
+<!-- SNAPSHOT:START -->
+## Repo Snapshot
+<!-- auto-generated by scripts/repo-snapshot.sh -->
+<!-- SNAPSHOT:END -->
