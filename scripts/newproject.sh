@@ -233,10 +233,10 @@ else
 fi
 
 # 安裝 repo-snapshot.sh 和 pre-commit hook
-MAIN_BRAIN_DIR="$HOME/main-brain"
-if [[ -f "$MAIN_BRAIN_DIR/scripts/repo-snapshot.sh" ]]; then
+# 使用 ~/.cursor/scripts/ 中已安裝的 repo-snapshot.sh
+if [[ -f "$HOME/.cursor/scripts/repo-snapshot.sh" ]]; then
     mkdir -p scripts
-    cp "$MAIN_BRAIN_DIR/scripts/repo-snapshot.sh" scripts/repo-snapshot.sh
+    cp "$HOME/.cursor/scripts/repo-snapshot.sh" scripts/repo-snapshot.sh
     chmod +x scripts/repo-snapshot.sh
     echo -e "${GREEN}✓${NC} 安裝 repo-snapshot.sh"
 
@@ -258,33 +258,22 @@ HOOKEOF
     bash scripts/repo-snapshot.sh . 2>/dev/null
     echo -e "${GREEN}✓${NC} 生成初始 snapshot"
 else
-    echo -e "${YELLOW}⚠${NC} main-brain/scripts/repo-snapshot.sh 不存在，跳過 snapshot 設定"
+    echo -e "${YELLOW}⚠${NC} repo-snapshot.sh 不存在，跳過 snapshot 設定"
+    echo -e "${YELLOW}⚠${NC} 請先執行 cna-dev-toolkit 的 install.sh"
 fi
 
-# 安裝 Cursor rules (from main-brain templates)
-if [[ -d "$MAIN_BRAIN_DIR/templates" ]]; then
-    mkdir -p .cursor/rules
-    # Snapshot update rule
-    if [[ -f "$MAIN_BRAIN_DIR/.cursor/rules/update-snapshot.mdc" ]]; then
-        cp "$MAIN_BRAIN_DIR/.cursor/rules/update-snapshot.mdc" .cursor/rules/update-snapshot.mdc
-    fi
-    # Quality gate rule
-    if [[ -f "$MAIN_BRAIN_DIR/templates/quality-gate.mdc.tmpl" ]]; then
-        cp "$MAIN_BRAIN_DIR/templates/quality-gate.mdc.tmpl" .cursor/rules/quality-gate.mdc
-    fi
-    echo -e "${GREEN}✓${NC} 安裝 Cursor rules (snapshot + quality-gate)"
-fi
-
-# 安裝 Cursor commands (from main-brain templates)
-if [[ -d "$MAIN_BRAIN_DIR/templates/commands" ]]; then
+# 安裝 OpenSpec commands (from templates)
+TEMPLATES_DIR="${TEMPLATES_DIR:-$HOME/.cursor/templates}"
+if [[ -d "$TEMPLATES_DIR/commands" ]]; then
     mkdir -p .cursor/commands
-    for tmpl in "$MAIN_BRAIN_DIR/templates/commands/"*.tmpl; do
-        if [[ -f "$tmpl" ]]; then
-            basename=$(basename "$tmpl" .tmpl)
-            cp "$tmpl" ".cursor/commands/$basename"
+    for cmd_file in "$TEMPLATES_DIR/commands/"*.md; do
+        if [[ -f "$cmd_file" ]]; then
+            cp "$cmd_file" .cursor/commands/
         fi
     done
-    echo -e "${GREEN}✓${NC} 安裝 Cursor commands (lesson)"
+    echo -e "${GREEN}✓${NC} 安裝 OpenSpec commands"
+else
+    echo -e "${YELLOW}⚠${NC} Templates not found, skipping commands"
 fi
 
 # 初始 commit
@@ -303,12 +292,15 @@ echo -e "${BLUE}配置環境...${NC}"
 ALIAS_NAME=$(echo "$PROJECT_NAME" | tr -d '-')
 
 # 檢查 alias 是否已存在
+# 使用 $EDITOR 環境變數，預設為 cursor
+PROJECT_EDITOR="${EDITOR:-cursor}"
+
 if grep -q "alias $ALIAS_NAME=" ~/.zshrc 2>/dev/null; then
     echo -e "${YELLOW}⚠${NC} alias '$ALIAS_NAME' 已存在，跳過"
 else
     echo "" >> ~/.zshrc
     echo "# $PROJECT_NAME" >> ~/.zshrc
-    echo "alias $ALIAS_NAME=\"cd $FULL_PATH && cursor .\"" >> ~/.zshrc
+    echo "alias $ALIAS_NAME=\"cd $FULL_PATH && $PROJECT_EDITOR .\"" >> ~/.zshrc
     echo -e "${GREEN}✓${NC} 新增 alias: $ALIAS_NAME"
 fi
 
@@ -387,21 +379,20 @@ fi
 echo ""
 echo "下一步:"
 echo "  1. source ~/.zshrc"
-echo "  2. $ALIAS_NAME  (或 cursor $FULL_PATH)"
-echo "  3. 在 Cursor 中輸入: plan: 規劃 $PROJECT_NAME 的架構"
+echo "  2. $ALIAS_NAME  (或 $PROJECT_EDITOR $FULL_PATH)"
+echo "  3. 在編輯器中開始開發"
 if [[ -f "$FULL_PATH/.env" ]] && command -v ctb &> /dev/null; then
     echo "  4. $BOT_ALIAS  (啟動 Telegram 遠端控制)"
 fi
 echo ""
 
-# 詢問是否開啟 Cursor
-read -p "現在開啟 Cursor? [Y/n]: " OPEN_CURSOR
-OPEN_CURSOR="${OPEN_CURSOR:-Y}"
-if [[ "$OPEN_CURSOR" =~ ^[Yy]$ ]]; then
-    # 優先用 cursor CLI，否則用 open
-    if command -v cursor &> /dev/null; then
-        cursor "$FULL_PATH"
+# 詢問是否開啟編輯器
+read -p "現在開啟編輯器 ($PROJECT_EDITOR)? [Y/n]: " OPEN_EDITOR
+OPEN_EDITOR="${OPEN_EDITOR:-Y}"
+if [[ "$OPEN_EDITOR" =~ ^[Yy]$ ]]; then
+    if command -v "$PROJECT_EDITOR" &> /dev/null; then
+        $PROJECT_EDITOR "$FULL_PATH"
     else
-        open -a "Cursor" "$FULL_PATH"
+        echo -e "${YELLOW}⚠${NC} $PROJECT_EDITOR 未找到，請手動開啟：$FULL_PATH"
     fi
 fi
