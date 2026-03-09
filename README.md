@@ -33,6 +33,8 @@ newproject
 - ✅ Git repository
 - ✅ CLAUDE.md（AI 協作指引）
 - ✅ context/（世界模型：ARCHITECTURE.md, DECISIONS.md, LEARNINGS.md）
+- ✅ OpenSpec（規格驅動開發）
+- ✅ .cursor/commands/（OpenSpec slash commands）
 - ✅ .gitignore
 - ✅ 自動更新的 repo snapshot
 - ✅ Shell alias（快速開啟專案）
@@ -115,6 +117,7 @@ council-query "React vs Vue 哪個更適合新專案？"
 | `context/ARCHITECTURE.md.tmpl` | 系統架構文件 |
 | `context/DECISIONS.md.tmpl` | 設計決策記錄 (ADR) |
 | `context/LEARNINGS.md.tmpl` | 經驗累積（避免重複犯錯） |
+| `commands/openspec-*.md` | OpenSpec slash commands |
 
 ### Skills
 
@@ -135,6 +138,9 @@ council-query "React vs Vue 哪個更適合新專案？"
 - **可選**（用於 GitHub Issues）：
   - `gh`（GitHub CLI）- [安裝指南](https://cli.github.com/)
   - `jq`（JSON 處理）- `brew install jq`
+
+- **可選**（用於 OpenSpec）：
+  - `openspec` CLI - `npm install -g @openclaw/openspec`
 
 - **可選**（用於 MAV Council）：
   - `curl`
@@ -233,24 +239,34 @@ newproject
 # 2. 開啟專案（使用自動生成的 alias）
 myawesomeproject  # 自動開啟 Cursor
 
-# 3. 在 Claude Code 中開發
+# 3. 使用 OpenSpec 定義規格（可選）
+# 在 Cursor 中使用 slash command
+# /openspec-proposal
+
+# 4. 在 Claude Code 中開發
 # @Claude 請幫我實作用戶登入功能
 
-# 4. 遇到問題記錄到 LEARNINGS.md
+# 5. 遇到問題記錄到 LEARNINGS.md
 # @Claude 請把這次錯誤記錄到 LEARNINGS.md
 
-# 5. Commit
+# 6. Commit
 git add .
 git commit -m "feat: add user login
 
 Co-Authored-By: Claude <noreply@anthropic.com>"
 
-# 6. 在 GitHub 建立 issue 追蹤下一個任務
+# 7. 在 GitHub 建立 issue 追蹤下一個任務
 ghif "新增深色模式" "使用者可切換主題" "my-awesome-project"
 
-# 7. 查看所有待辦 issues
+# 8. 查看所有待辦 issues
 ghil_repo "my-awesome-project"
 ```
+
+---
+
+## 🤝 分享給團隊
+
+想要分享這套工具給同事？參考 **[SHARE-WITH-TEAM.md](SHARE-WITH-TEAM.md)** 獲取簡短的分享訊息範本。
 
 ---
 
