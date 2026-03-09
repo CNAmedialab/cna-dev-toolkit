@@ -4,6 +4,15 @@
 
 **3 個核心工具 + AI 協作模板**，讓你快速建立專案並使用 AI 協作開發。
 
+## ✨ v1.0.2 新功能
+
+- ✅ **支援任何編輯器** - 不再綁定 Cursor，可用 VS Code, Vim 等（設定 `$EDITOR`）
+- ✅ **獨立配置檔** - 使用 `~/.cna-toolkit.sh`，保持 `.zshrc` 乾淨
+- ✅ **完全移除** - 新增 `uninstall.sh`，可乾淨移除所有檔案
+- ✅ **彈性路徑** - 不再依賴固定目錄結構
+
+[查看完整更新日誌](https://github.com/CNAmedialab/cna-dev-toolkit/releases/tag/v1.0.2)
+
 ---
 
 ## 🚀 安裝（1 分鐘）
@@ -18,6 +27,23 @@ cd ~/cna-dev-toolkit
 完成後：
 ```bash
 source ~/.zshrc  # 或開新終端機視窗
+```
+
+### 自訂編輯器
+
+預設使用 Cursor，如需使用其他編輯器：
+
+```bash
+# 使用 VS Code
+export EDITOR=code
+./install.sh
+
+# 使用 Vim
+export EDITOR=vim
+./install.sh
+
+# 或在 .zshrc 中永久設定
+echo 'export EDITOR=code' >> ~/.zshrc
 ```
 
 **注意**：你可以將 toolkit 克隆到任何位置（如 `~/tools/`, `~/dev/` 等），安裝腳本會自動處理路徑。
@@ -209,6 +235,18 @@ source ~/.zshrc
 cd ~/cna-dev-toolkit  # 或你安裝的其他位置
 git pull
 ./install.sh
+```
+
+### Q6: 如何完全移除
+
+```bash
+cd ~/cna-dev-toolkit  # 或你安裝的位置
+./uninstall.sh
+
+# 會自動：
+# - 移除所有安裝的檔案
+# - 備份並清理 .zshrc
+# - 清理空目錄
 ```
 
 ---

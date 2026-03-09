@@ -5,6 +5,34 @@ All notable changes to CNA Dev Toolkit will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2026-03-09
+
+### Fixed
+- **Removed hardcoded Cursor dependency** - Now uses `$EDITOR` environment variable (defaults to `cursor`)
+- **Removed hardcoded ~/main-brain path** - Uses `~/.cursor/scripts/` and `~/.cursor/templates/` instead
+- **Clean shell configuration** - Creates `~/.cna-toolkit.sh` instead of polluting `.zshrc`
+
+### Added
+- `uninstall.sh` - Clean removal script with automatic backup
+
+### Changed
+- `install.sh` - Now creates separate config file (`~/.cna-toolkit.sh`)
+- `newproject.sh` - Editor-agnostic, uses `$EDITOR` variable
+- Project aliases use configured editor instead of hardcoded `cursor`
+
+### Migration Guide
+Users upgrading from v1.0.0 or v1.0.1:
+```bash
+cd ~/cna-dev-toolkit  # or your installation path
+git pull
+./install.sh
+source ~/.zshrc
+```
+
+This will create `~/.cna-toolkit.sh` and update your configuration.
+
+---
+
 ## [1.0.0] - 2026-03-09
 
 ### Added
