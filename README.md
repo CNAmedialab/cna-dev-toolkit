@@ -9,8 +9,9 @@
 ## 🚀 安裝（1 分鐘）
 
 ```bash
-git clone https://github.com/CNAmedialab/cna-dev-toolkit.git ~/clawd/cna-dev-toolkit
-cd ~/clawd/cna-dev-toolkit
+# 克隆到任何你喜歡的位置
+git clone https://github.com/CNAmedialab/cna-dev-toolkit.git ~/cna-dev-toolkit
+cd ~/cna-dev-toolkit
 ./install.sh
 ```
 
@@ -18,6 +19,8 @@ cd ~/clawd/cna-dev-toolkit
 ```bash
 source ~/.zshrc  # 或開新終端機視窗
 ```
+
+**注意**：你可以將 toolkit 克隆到任何位置（如 `~/tools/`, `~/dev/` 等），安裝腳本會自動處理路徑。
 
 ---
 
@@ -42,8 +45,9 @@ newproject
 ### 2. 管理 GitHub Issues
 
 ```bash
-# 載入 helper functions
-source ~/clawd/cna-dev-toolkit/scripts/issue-helpers.sh
+# 載入 helper functions（安裝後會自動載入）
+# 如需手動載入：
+source ~/cna-dev-toolkit/scripts/issue-helpers.sh
 
 # 建立 bug issue
 ghib "按鈕無反應" "詳細描述..." "your-project"
@@ -61,11 +65,8 @@ ghiclaim 123
 ghi_help
 ```
 
-**設定永久載入**（只需執行一次）：
-```bash
-echo 'source ~/clawd/cna-dev-toolkit/scripts/issue-helpers.sh' >> ~/.zshrc
-source ~/.zshrc
-```
+**設定永久載入**：
+安裝時已自動設定，無需手動操作。
 
 ### 3. 多模型協作（可選）
 
@@ -166,7 +167,7 @@ source ~/.zshrc
 
 **解決**：
 ```bash
-chmod +x ~/clawd/cna-dev-toolkit/scripts/newproject.sh
+chmod +x ~/.cursor/scripts/newproject.sh
 ```
 
 ### Q3: GitHub Issues 相關指令無法使用
@@ -204,7 +205,8 @@ source ~/.zshrc
 ### Q5: 想要更新到最新版
 
 ```bash
-cd ~/clawd/cna-dev-toolkit
+# 進入你的 toolkit 目錄（根據你安裝的位置）
+cd ~/cna-dev-toolkit  # 或你安裝的其他位置
 git pull
 ./install.sh
 ```

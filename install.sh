@@ -84,11 +84,16 @@ echo ""
 # 2. 建立目標目錄
 info "建立目標目錄..."
 
+# 模板目錄：優先使用環境變數，否則使用預設位置
+TEMPLATES_DIR="${TEMPLATES_DIR:-$HOME/.cursor/templates}"
+
 mkdir -p "$HOME/.cursor/scripts"
-mkdir -p "$HOME/clawd/main-brain/templates/context"
+mkdir -p "$TEMPLATES_DIR/context"
+mkdir -p "$TEMPLATES_DIR/commands"
 mkdir -p "$HOME/.claude/skills"
 
 success "目標目錄已建立"
+info "模板目錄: $TEMPLATES_DIR"
 
 # 3. 複製腳本
 info "安裝腳本..."
@@ -112,11 +117,12 @@ success "council-query.sh 已準備就緒"
 # 4. 複製模板
 info "安裝模板..."
 
-cp "$TOOLKIT_DIR/templates/CLAUDE.md.tmpl" "$HOME/clawd/main-brain/templates/"
-cp "$TOOLKIT_DIR/templates/gitignore.tmpl" "$HOME/clawd/main-brain/templates/"
-cp -r "$TOOLKIT_DIR/templates/context/"* "$HOME/clawd/main-brain/templates/context/"
+cp "$TOOLKIT_DIR/templates/CLAUDE.md.tmpl" "$TEMPLATES_DIR/"
+cp "$TOOLKIT_DIR/templates/gitignore.tmpl" "$TEMPLATES_DIR/"
+cp -r "$TOOLKIT_DIR/templates/context/"* "$TEMPLATES_DIR/context/"
+cp "$TOOLKIT_DIR/templates/commands/"* "$TEMPLATES_DIR/commands/"
 
-success "模板已安裝到 ~/clawd/main-brain/templates/"
+success "模板已安裝到 $TEMPLATES_DIR"
 
 # 5. 複製 skills
 info "安裝 skills..."
@@ -132,14 +138,14 @@ info "設定 shell aliases..."
 if grep -q "# CNA Dev Toolkit aliases" "$SHELL_RC" 2>/dev/null; then
   warning "Aliases 已存在，跳過"
 else
-  cat >> "$SHELL_RC" <<'EOF'
+  cat >> "$SHELL_RC" <<EOF
 
 # CNA Dev Toolkit aliases
 alias newproject='bash ~/.cursor/scripts/newproject.sh'
-alias council-query='bash ~/clawd/cna-dev-toolkit/scripts/council-query.sh'
+alias council-query='bash $TOOLKIT_DIR/scripts/council-query.sh'
 
 # Issue helpers (載入函數)
-source ~/clawd/cna-dev-toolkit/scripts/issue-helpers.sh 2>/dev/null || true
+source $TOOLKIT_DIR/scripts/issue-helpers.sh 2>/dev/null || true
 EOF
   success "Aliases 已加入到 $SHELL_RC"
 fi
@@ -157,7 +163,7 @@ else
   ERRORS=$((ERRORS + 1))
 fi
 
-if [ -f "$HOME/clawd/main-brain/templates/CLAUDE.md.tmpl" ]; then
+if [ -f "$TEMPLATES_DIR/CLAUDE.md.tmpl" ]; then
   success "模板安裝成功"
 else
   error "模板安裝失敗"
@@ -194,7 +200,7 @@ if [ $ERRORS -eq 0 ]; then
   echo "4. 多模型協作（需先設定 OpenRouter API key）："
   echo "   ${GREEN}council-query \"你的問題\"${NC}"
   echo ""
-  echo "完整說明: ${BLUE}cat ~/clawd/cna-dev-toolkit/README.md${NC}"
+  echo "完整說明: ${BLUE}cat $TOOLKIT_DIR/README.md${NC}"
   echo ""
 else
   error "安裝過程中發生 $ERRORS 個錯誤，請檢查上方訊息"

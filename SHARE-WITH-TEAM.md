@@ -10,14 +10,16 @@
 嘿！我整理了一套開發工具包，幫你快速建立專案和管理 Issues。
 
 安裝（1 分鐘）：
-git clone https://github.com/CNAmedialab/cna-dev-toolkit.git ~/clawd/cna-dev-toolkit
-cd ~/clawd/cna-dev-toolkit
+git clone https://github.com/CNAmedialab/cna-dev-toolkit.git ~/cna-dev-toolkit
+cd ~/cna-dev-toolkit
 ./install.sh
 
 然後執行：
 newproject
 
 就完成了！README 有完整說明。
+
+註：可以克隆到任何你喜歡的位置，安裝腳本會自動處理路徑。
 ```
 
 ---
@@ -54,7 +56,7 @@ A: 不需要。README 有所有必要資訊（~100 行）。
 A: cna-dev-toolkit 是精簡版，只包含核心工具。main-brain 是完整版，包含文檔和進階功能。
 
 **Q: 如何更新？**
-A: `cd ~/clawd/cna-dev-toolkit && git pull && ./install.sh`
+A: `cd ~/cna-dev-toolkit && git pull && ./install.sh`（根據你的安裝位置）
 
 ---
 
